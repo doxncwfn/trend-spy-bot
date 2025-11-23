@@ -1,0 +1,206 @@
+\documentclass[twoside,final]{report-template}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage[protrusion=false]{microtype}
+
+\usepackage{graphicx, caption}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{multirow,multicol}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{makecell}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{tcolorbox}
+\usepackage{lastpage}
+
+\definecolor{keywordcolor}{rgb}{0.13,0.13,1} % Blue keywords
+\definecolor{stringcolor}{rgb}{0.7,0.13,0.13} % Dark red strings
+\definecolor{commentcolor}{rgb}{0.25,0.5,0.35} % Green comments
+\definecolor{backgroundcolor}{rgb}{0.97,0.97,0.97} % Light background
+\definecolor{numbercolor}{rgb}{0.85,0.65,0.13} % Numbers
+
+\lstdefinelanguage{Python}{
+  morekeywords={
+    and, as, assert, async, await, break, class, continue, def, del, elif, else, except,
+    False, finally, for, from, global, if, import, in, is, lambda, None, nonlocal, not, 
+    or, pass, raise, return, True, try, while, with, yield
+  },
+  keywordstyle=\color{keywordcolor}\bfseries,
+  morekeywords=[2]{bool, bytes, bytearray, complex, dict, float, frozenset, int, list, object, set, str, tuple},
+  keywordstyle=[2]\color{blue}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=true,
+  comment=[l]{\#},
+  morecomment=[s]{'''}{'''}, 
+  morecomment=[s]{"""}{"""},
+  commentstyle=\color{commentcolor}\ttfamily,
+  stringstyle=\color{stringcolor}\ttfamily,
+  morestring=[b]',
+  morestring=[b]",
+  % Highlight numbers
+  literate=
+    *{0}{{{\color{numbercolor}0}}}1
+    {1}{{{\color{numbercolor}1}}}1
+    {2}{{{\color{numbercolor}2}}}1
+    {3}{{{\color{numbercolor}3}}}1
+    {4}{{{\color{numbercolor}4}}}1
+    {5}{{{\color{numbercolor}5}}}1
+    {6}{{{\color{numbercolor}6}}}1
+    {7}{{{\color{numbercolor}7}}}1
+    {8}{{{\color{numbercolor}8}}}1
+    {9}{{{\color{numbercolor}9}}}1
+    {.0}{{{\color{numbercolor}.0}}}2
+    {.1}{{{\color{numbercolor}.1}}}2
+    {.2}{{{\color{numbercolor}.2}}}2
+    {.3}{{{\color{numbercolor}.3}}}2
+    {.4}{{{\color{numbercolor}.4}}}2
+    {.5}{{{\color{numbercolor}.5}}}2
+    {.6}{{{\color{numbercolor}.6}}}2
+    {.7}{{{\color{numbercolor}.7}}}2
+    {.8}{{{\color{numbercolor}.8}}}2
+    {.9}{{{\color{numbercolor}.9}}}2
+    {e+}{{{\color{numbercolor}e+}}}2
+    {e-}{{{\color{numbercolor}e-}}}2
+    {\#\#NUMSTART\#\#}{}{0}
+    {\#\#NUMEND\#\#}{}{0},
+}
+\lstset{
+  language=Python,
+  backgroundcolor=\color{backgroundcolor},
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=10pt,
+  tabsize=2,
+  showspaces=false,
+  showstringspaces=false,
+  breaklines=true,
+  breakatwhitespace=true,
+  frame=single,
+}
+
+\lstdefinelanguage{TypeScript}{
+  keywords={abstract, as, boolean, break, case, catch, class, continue, const, constructor, debugger, declare, default, delete, do, else, enum, export, extends, false, finally, for, from, function, get, if, implements, import, in, infer, instanceof, interface, is, keyof, let, module, namespace, never, new, null, number, object, of, package, private, protected, public, readonly, require, global, return, set, static, string, super, switch, symbol, this, throw, true, try, type, typeof, undefined, unique, unknown, var, void, while, with, yield, async, await},
+  keywordstyle=\color{keywordcolor}\bfseries,
+  ndkeywords={string, number, boolean, Promise, any, void},
+  ndkeywordstyle=\color{blue}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=true,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{commentcolor}\ttfamily,
+  stringstyle=\color{stringcolor}\ttfamily,
+  morestring=[b]',
+  morestring=[b]",
+}
+
+\lstset{
+  language=TypeScript,
+  backgroundcolor=\color{backgroundcolor},
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=10pt,
+  tabsize=2,
+  showspaces=false,
+  showstringspaces=false,
+  breaklines=true,
+  breakatwhitespace=true,
+  frame=single,
+}
+\lstdefinelanguage{EnvCustom}{
+  keywords={VITE_APP_API_URL, DATABASE_URL, DB_HOST, DB_USER, DB_PASSWORD, DB_PORT, DB_NAME, JWT_SECRET},
+  keywordstyle=\color{blue}\bfseries,
+  sensitive=true,
+  comment=[l]{\#},
+  commentstyle=\color{gray}\ttfamily,
+  morestring=[b]',
+  morestring=[b]",
+  stringstyle=\color{red}\ttfamily,
+  identifierstyle=\color{black}
+}
+
+\lstdefinelanguage{JavaScriptCustom}{
+  keywords={
+    break, case, catch, class, const, continue, debugger, default, delete, do, else, export,
+    extends, finally, for, function, if, import, in, instanceof, let, new, return, super, 
+    switch, this, throw, try, typeof, var, void, while, with, yield, await, async,
+    mysql, dotenv, process, config, createPool, getConnection, release
+  },
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={true, false, null, undefined, NaN, Infinity},
+  ndkeywordstyle=\color{teal}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=true,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{gray}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+
+\lstdefinelanguage{SQL}
+{
+  keywords={SELECT, FROM, WHERE, GROUP BY, HAVING, ORDER, BY, CREATE, PROCEDURE, FUNCTION, TRIGGER, BEGIN, END, DECLARE, IF, ELSE, RETURN, SET, INSERT, UPDATE, DELETE, INTO, VALUES, SIGNAL, JOIN, ON, AND, IN, GROUP, AS, RETURNS, DETERMINISTIC, COUNT, IFNULL, SQL, DATA, READS, THEN, AFTER, FOR, EACH, ROW, OLD, NEW, ROUND, CONSTRAINT, FOREIGN, KEY, REFERENCES, PRIMARY, CHECK, TABLE, DEFAULT, DESC, UNION, ALL, OVER, WHILE, DO, LEAVE, EXISTS, BEFORE, OR, IDENTIFIED, GRANT, TO, LEFT, RIGHT},
+  keywordstyle=\color{blue}\bfseries,
+  morekeywords=[2]{INT, CHAR, VARCHAR, BOOLEAN, DATE, DECIMAL, ENUM, TIME, CASCADE, NULL, NOT, USER, PRIVILEGES, TRUE},
+  keywordstyle=[2]\color{red}\bfseries,
+  comment=[l]{--},
+  commentstyle=\color{gray}\ttfamily,
+  morestring=[b]',
+  stringstyle=\color{teal},
+  basicstyle=\ttfamily\small,
+  showstringspaces=false,
+  breaklines=true
+}
+
+\lstset
+{
+  language=SQL,
+  frame=single,
+  breaklines=true,
+  columns=flexible,
+  keepspaces=true,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  backgroundcolor=\color{white}
+}
+\newcommand{\sql}[1]
+{
+  \begin{lstlisting}[language=sql]
+    #1
+  \end{lstlisting}
+}
+\newcommand{\python}[1]
+{
+  \begin{lstlisting}[language=python]
+    #1
+  \end{lstlisting}
+}
+\AtBeginDocument{\counterwithin{lstlisting}{section}}
+
+\begin{document}
+\fancyfoot{}
+% \coverpage\clearpage
+
+\tableofcontents\clearpage
+\listoffigures\clearpage
+\setcounter{page}{1}
+\fancyfoot[L]{\scriptsize \ttfamily Place Holder}
+\fancyfoot[R]{\scriptsize \ttfamily Page {\thepage}/\pageref{LastPage}}
+\section{Test}
+\end{document}
