@@ -1,0 +1,33 @@
+{
+    "ticker": "MSFT",
+    "timestamp": "2025-11-23T21:35:02.509006",
+    "metrics": {
+        "MSE": 21.977610740954766,
+        "RMSE": 4.68802844924759,
+        "MAE": 3.2634937537259234,
+        "R2": 0.9984828511228315,
+        "MAPE": 1.2771162081674279,
+        "Directional_Accuracy": 47.98136645962733
+    },
+    "training_time_seconds": 2574.754437,
+    "train_samples": 6974,
+    "val_samples": 997,
+    "test_samples": 1993,
+    "config": {
+        "seq_length": 60,
+        "pred_horizon": 1,
+        "test_size": 0.2,
+        "val_size": 0.1,
+        "hidden_size": 128,
+        "num_lstm_layers": 2,
+        "num_attention_heads": 8,
+        "num_transformer_layers": 2,
+        "dropout": 0.2,
+        "learning_rate": 0.001,
+        "batch_size": 64,
+        "epochs": 100,
+        "early_stopping_patience": 15,
+        "device": "cpu"
+    },
+    "model_path": "/Users/macbook/Downloads/HCMUT/Assignments/AI Projects/trend-spy-bot/src/backend/models/train/checkpoints/MSFT_model.pth"
+}

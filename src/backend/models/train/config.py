@@ -13,7 +13,7 @@ CONFIG = {
     'dropout': 0.2,             # Dropout rate
     
     # Training parameters
-    'learning_rate': 0.001,     # Initial learning rate
+    'learning_rate': 0.0003,    # Initial learning rate
     'batch_size': 64,           # Batch size
     'epochs': 100,              # Maximum epochs
     'early_stopping_patience': 15,  # Early stopping patience

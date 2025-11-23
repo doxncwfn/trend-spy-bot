@@ -74,11 +74,8 @@ class ProductionPipeline:
             logger.info(f"Data loaded - Train: {len(train_df)}, Val: {len(val_df)}, Test: {len(test_df)}")
             
             # Initialize model
-            model = StockForecaster(seq_len=60, predict_returns=True, device='cpu')
-            
             model = StockForecaster(
                 seq_len=self.config['seq_length'],
-                predict_returns=True,
                 device='cpu'
             )
 
@@ -92,6 +89,7 @@ class ProductionPipeline:
             logger.info("Starting training...")
             start_time = datetime.now()
 
+            # history now contains loss based on the weighted CombinedLoss
             history = model.fit(train_df, val_df, epochs=self.config['epochs'])
 
             training_time = (datetime.now() - start_time).total_seconds()
@@ -155,7 +153,10 @@ class ProductionPipeline:
     
     def _evaluate_model(self, model, test_df):
         """Helper to evaluate model on test set"""
-        required_cols = ['Open', 'High', 'Low', 'Close', 'Volume']
+        required_cols = [
+            'Open', 'High', 'Low', 'Close', 'Volume', 
+            'Return', 'SMA_10', 'SMA_30', 'MACD', 'MACD_Signal', 'RSI'
+        ]
         test_data = test_df[required_cols].values.astype(np.float32)
         
         predictions = []
@@ -165,17 +166,15 @@ class ProductionPipeline:
         with torch.no_grad():
             for i in range(len(test_data) - model.seq_len):
                 seq = test_data[i:i + model.seq_len]
-                seq_tensor = torch.FloatTensor(seq).unsqueeze(0).to(model.device)  # (1, seq_len, 5)
                 
                 # Forward pass
                 scaled_seq = torch.FloatTensor(model.scaler.transform(seq)).unsqueeze(0).to(model.device)
-                pred_scaled = model.model(scaled_seq)
                 
-                # Handle both scalar and tensor output
-                if pred_scaled.dim() == 0:  # scalar tensor
-                    pred_return = pred_scaled.item()
-                else:
-                    pred_return = pred_scaled.squeeze().item()
+                # --- FIX: Unpack the two model outputs (Regression and Classification) ---
+                pred_reg, pred_cls = model.model(scaled_seq)
+                
+                # We use the Regression prediction (pred_reg) for price calculation
+                pred_return = pred_reg.item() if pred_reg.dim() == 0 else pred_reg.squeeze().item()
                 
                 # Convert return back to price
                 last_close = test_data[i + model.seq_len - 1, 3]  # previous close
@@ -205,7 +204,7 @@ class ProductionPipeline:
                 results = self.train_single_stock(ticker)
                 all_results[ticker] = results
             except Exception as e:
-                logger.error(f"Failed to train {ticker}: {str(e)}")
+                logger.error(f"Failed to train {ticker}: {str(e)}", exc_info=True)
                 failed.append(ticker)
                 continue
         
@@ -295,17 +294,15 @@ def main():
         logger.info(f"CUDA Device: {torch.cuda.get_device_name(0)}")
     logger.info("="*80 + "\n")
     
-    # Initialize pipeline
     pipeline = ProductionPipeline(CONFIG)
-    
-    # Train single stock
-    results = pipeline.train_single_stock('AMZN')
     
     # Train all stocks
     # all_results = pipeline.train_all_stocks()
     
+    result = pipeline.train_single_stock("META")
+    
     logger.info("\nTraining pipeline completed successfully!")
-    return results
+    return result
 
 
 if __name__ == "__main__":

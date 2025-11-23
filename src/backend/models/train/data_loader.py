@@ -10,6 +10,41 @@ class StockDataLoader:
     def __init__(self, data_dir: str):
         self.data_dir = Path(data_dir)
         
+    def _add_technical_indicators(self, df: pd.DataFrame) -> pd.DataFrame:
+        """
+        Calculates and adds common technical indicators:
+        - Return, Simple Moving Averages (SMA), MACD, Relative Strength Index (RSI)
+        """
+        # Calculate daily returns
+        df['Return'] = df['Close'].pct_change()
+        
+        # Simple Moving Averages (SMA)
+        df['SMA_10'] = df['Close'].rolling(window=10).mean()
+        df['SMA_30'] = df['Close'].rolling(window=30).mean()
+        
+        # Exponential Moving Averages (EMA) for MACD
+        exp12 = df['Close'].ewm(span=12, adjust=False).mean()
+        exp26 = df['Close'].ewm(span=26, adjust=False).mean()
+        df['MACD'] = exp12 - exp26
+        df['MACD_Signal'] = df['MACD'].ewm(span=9, adjust=False).mean()
+        
+        # Relative Strength Index (RSI) - 14 days
+        delta = df['Close'].diff()
+        gain = delta.where(delta > 0, 0)
+        loss = -delta.where(delta < 0, 0)
+        
+        avg_gain = gain.ewm(span=14, adjust=False).mean()
+        avg_loss = loss.ewm(span=14, adjust=False).mean()
+        
+        # Handle division by zero for RSI (rare, but possible if loss is zero)
+        rs = np.where(avg_loss == 0, 0, avg_gain / avg_loss)
+        df['RSI'] = 100 - (100 / (1 + rs))
+        
+        # Drop rows with NaN values resulting from indicator calculation
+        df = df.dropna().reset_index(drop=True)
+        
+        return df
+
     def load_stock(
         self,
         ticker: str,
@@ -18,14 +53,6 @@ class StockDataLoader:
     ) -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
         """
         Load stock data and split into train/val/test
-        
-        Args:
-            ticker: Stock ticker
-            test_size: Proportion for testing
-            val_size: Proportion for validation
-            
-        Returns:
-            train_df, val_df, test_df
         """
         filepath = self.data_dir / f'{ticker}.csv'
         
@@ -49,6 +76,9 @@ class StockDataLoader:
         
         # Clean data
         df = self._clean_data(df)
+        
+        # ADD TECHNICAL INDICATORS
+        df = self._add_technical_indicators(df)
         
         # Time-series split
         n = len(df)

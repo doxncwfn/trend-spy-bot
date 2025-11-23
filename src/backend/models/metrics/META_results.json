@@ -1,0 +1,33 @@
+{
+    "ticker": "META",
+    "timestamp": "2025-11-23T22:03:05.752939",
+    "metrics": {
+        "MSE": 279.2851208327684,
+        "RMSE": 16.711825777956413,
+        "MAE": 13.170200363666817,
+        "R2": 0.9876300640514206,
+        "MAPE": 2.6855937990056633,
+        "Directional_Accuracy": 48.772504091653026
+    },
+    "training_time_seconds": 579.441572,
+    "train_samples": 2352,
+    "val_samples": 336,
+    "test_samples": 672,
+    "config": {
+        "seq_length": 60,
+        "pred_horizon": 1,
+        "test_size": 0.2,
+        "val_size": 0.1,
+        "hidden_size": 128,
+        "num_lstm_layers": 2,
+        "num_attention_heads": 8,
+        "num_transformer_layers": 2,
+        "dropout": 0.2,
+        "learning_rate": 0.001,
+        "batch_size": 64,
+        "epochs": 100,
+        "early_stopping_patience": 15,
+        "device": "cpu"
+    },
+    "model_path": "/Users/macbook/Downloads/HCMUT/Assignments/AI Projects/trend-spy-bot/src/backend/models/train/checkpoints/META_model.pth"
+}

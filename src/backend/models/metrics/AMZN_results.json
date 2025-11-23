@@ -1,0 +1,33 @@
+{
+    "ticker": "AMZN",
+    "timestamp": "2025-11-23T20:51:50.259210",
+    "metrics": {
+        "MSE": 17.834847671793295,
+        "RMSE": 4.223132447815637,
+        "MAE": 3.2359995746293717,
+        "R2": 0.987148261765417,
+        "MAPE": 2.1122650745553337,
+        "Directional_Accuracy": 50.40234089246525
+    },
+    "training_time_seconds": 1334.392689,
+    "train_samples": 4996,
+    "val_samples": 714,
+    "test_samples": 1428,
+    "config": {
+        "seq_length": 60,
+        "pred_horizon": 1,
+        "test_size": 0.2,
+        "val_size": 0.1,
+        "hidden_size": 128,
+        "num_lstm_layers": 2,
+        "num_attention_heads": 8,
+        "num_transformer_layers": 2,
+        "dropout": 0.2,
+        "learning_rate": 0.001,
+        "batch_size": 64,
+        "epochs": 100,
+        "early_stopping_patience": 15,
+        "device": "cpu"
+    },
+    "model_path": "/Users/macbook/Downloads/HCMUT/Assignments/AI Projects/trend-spy-bot/src/backend/models/train/checkpoints/AMZN_model.pth"
+}
