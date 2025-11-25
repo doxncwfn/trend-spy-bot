@@ -11,12 +11,25 @@ plt.rcParams['figure.figsize'] = (15, 10)
 import logging
 logger = logging.getLogger(__name__)
 
-class ModelEvaluator:    
+class ModelEvaluator:
+    """
+    Evaluates model performance on PRICE predictions.
+    
+    Note: The model predicts log returns, but by the time predictions reach
+    this evaluator, they have already been reconstructed into prices using
+    the exponential transformation in main.py or tuner.py.
+    """
+    
     def __init__(self, output_dir: str):
         self.output_dir = Path(output_dir)
         self.output_dir.mkdir(exist_ok=True, parents=True)
         
-    def calculate_metrics(self, y_true: np.ndarray, y_pred: np.ndarray) -> dict:        
+    def calculate_metrics(
+        self,
+        y_true: np.ndarray,
+        y_pred: np.ndarray,
+        y_cls_prob: np.ndarray | None = None   # ← NEW
+    ) -> dict:
         metrics = {
             'MSE': mean_squared_error(y_true, y_pred),
             'RMSE': np.sqrt(mean_squared_error(y_true, y_pred)),
@@ -24,15 +37,23 @@ class ModelEvaluator:
             'R2': r2_score(y_true, y_pred),
             'MAPE': np.mean(np.abs((y_true - y_pred) / (y_true + 1e-8))) * 100,
         }
-        
-        # Directional accuracy
+
         if len(y_true) > 1:
             direction_true = np.diff(y_true) > 0
-            direction_pred = np.diff(y_pred) > 0
-            metrics['Directional_Accuracy'] = np.mean(direction_true == direction_pred) * 100
+
+            if y_cls_prob is not None and len(y_cls_prob) > 1:
+                direction_pred = y_cls_prob[1:] > 0.5
+                metrics['Directional_Accuracy'] = np.mean(direction_true == direction_pred) * 100
+                metrics['Dir_Acc_Source'] = 'classification_head'
+            else:
+                direction_pred = np.diff(y_pred) > 0
+                metrics['Directional_Accuracy'] = np.mean(direction_true == direction_pred) * 100
+                metrics['Dir_Acc_Source'] = 'regression_diff'
+
         else:
             metrics['Directional_Accuracy'] = 0.0
-        
+            metrics['Dir_Acc_Source'] = 'N/A'
+
         return metrics
     
     def plot_predictions(
@@ -93,7 +114,7 @@ class ModelEvaluator:
         plt.close()
         
         logger.info(f"Predictions plot saved: {save_path}")
-    
+
     def plot_training_history(self, history: dict, ticker: str = "Stock"):        
         fig, axes = plt.subplots(1, 2, figsize=(15, 5))
         
@@ -107,9 +128,9 @@ class ModelEvaluator:
         axes[0].legend()
         axes[0].grid(True, alpha=0.3)
         
-        # Metrics
-        axes[1].plot(epochs, history['val_rmse'], label='RMSE', linewidth=2)
-        axes[1].plot(epochs, history['val_mae'], label='MAE', linewidth=2)
+        # Metrics (these are on log returns, not prices)
+        axes[1].plot(epochs, history['val_rmse'], label='RMSE (log return)', linewidth=2)
+        axes[1].plot(epochs, history['val_mae'], label='MAE (log return)', linewidth=2)
         axes[1].set_title(f'{ticker} - Validation Metrics', fontsize=14, fontweight='bold')
         axes[1].set_xlabel('Epoch')
         axes[1].set_ylabel('Metric Value')

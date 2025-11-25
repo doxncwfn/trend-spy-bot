@@ -1,0 +1,33 @@
+{
+    "ticker": "NFLX",
+    "timestamp": "2025-11-25T00:39:24.480598",
+    "metrics": {
+        "MSE": 222.83281612386887,
+        "RMSE": 14.927585743309896,
+        "MAE": 9.681643098927763,
+        "R2": 0.997587618286656,
+        "MAPE": 1.8699426598296245,
+        "Directional_Accuracy": 51.077199281867145
+    },
+    "training_time_seconds": 2261.934816,
+    "train_samples": 4112,
+    "val_samples": 588,
+    "test_samples": 1175,
+    "config": {
+        "seq_length": 60,
+        "pred_horizon": 1,
+        "test_size": 0.2,
+        "val_size": 0.1,
+        "hidden_size": 128,
+        "num_lstm_layers": 2,
+        "num_attention_heads": 8,
+        "num_transformer_layers": 2,
+        "dropout": 0.2,
+        "learning_rate": 0.0003,
+        "batch_size": 64,
+        "epochs": 100,
+        "early_stopping_patience": 15,
+        "device": "cpu"
+    },
+    "model_path": "/Users/macbook/Downloads/HCMUT/Assignments/AI Projects/trend-spy-bot/src/backend/models/train/checkpoints/NFLX_model.pth"
+}

@@ -48,33 +48,43 @@ class LambdaTuner(ModelEvaluator):
         self.all_results = []
 
     def _evaluate_model_on_test_set(self, model):
-        """Replicates evaluation logic from main.py"""
-        required_cols = [
+        """
+        Replicates evaluation logic from main.py but using log returns.
+        Reconstructs prices using exponential of predicted log returns.
+        """
+        feature_cols = [
             'Open', 'High', 'Low', 'Close', 'Volume', 
             'Return', 'SMA_10', 'SMA_30', 'MACD', 'MACD_Signal', 'RSI'
         ]
-        test_data = self.test_df[required_cols].values.astype(np.float32)
+        
+        test_features = self.test_df[feature_cols].values.astype(np.float32)
+        test_close = self.test_df['Close'].values.astype(np.float32)
         
         predictions = []
         actuals = []
+        cls_probs = []
 
         model.model.eval()
         with torch.no_grad():
-            for i in range(len(test_data) - model.seq_len):
-                seq = test_data[i:i + model.seq_len]
+            for i in range(len(test_features) - model.seq_len):
+                # Get feature sequence
+                seq = test_features[i:i + model.seq_len]
                 scaled_seq = torch.FloatTensor(model.scaler.transform(seq)).unsqueeze(0).to(model.device)
                 
-                pred_reg, _ = model.model(scaled_seq)
-                pred_return = pred_reg.item() if pred_reg.dim() == 0 else pred_reg.squeeze().item()
-                
-                last_close = test_data[i + model.seq_len - 1, 3]
-                pred_price = last_close * (1 + pred_return)
-                actual_price = test_data[i + model.seq_len, 3]
+                # Get prediction
+                pred_log_return, pred_cls = model.model(scaled_seq)
+                pred_log_return = pred_log_return.item() if pred_log_return.dim() == 0 else pred_log_return.squeeze().item()
+                pred_prob = torch.sigmoid(pred_cls).item()
+
+                last_close = test_close[i + model.seq_len - 1]
+                pred_price = last_close * np.exp(pred_log_return)
+                actual_price = test_close[i + model.seq_len]
                 
                 predictions.append(pred_price)
                 actuals.append(actual_price)
+                cls_probs.append(pred_prob)
         
-        return np.array(predictions), np.array(actuals)
+        return np.array(predictions), np.array(actuals), np.array(cls_probs)
 
 
     def run_grid_search(self, lambda_reg_values: list, lambda_cls_values: list):
@@ -91,36 +101,30 @@ class LambdaTuner(ModelEvaluator):
         
         # Grid Search iteration
         for lambda_reg, lambda_cls in product(lambda_reg_values, lambda_cls_values):
-            
             # 1. Initialize and Configure Model
             model = StockForecaster(
                 seq_len=self.config['seq_length'],
                 device=self.config['device']
             )
-            # CRITICAL: Overwrite the criterion with the current lambda values
             model.criterion = model.criterion.__class__(
                 lambda_reg=lambda_reg, 
                 lambda_cls=lambda_cls
             )
-            
             logger.info(f"\n---> Tuning: Reg={lambda_reg:.2f}, Cls={lambda_cls:.2f} <---")
             
             try:
                 # 2. Train Model
                 start_time = datetime.now()
-                # Pass the full training and validation dataframes
                 history = model.fit(self.train_df, self.val_df, epochs=self.config['epochs'])
                 training_time = (datetime.now() - start_time).total_seconds()
 
                 # 3. Evaluate on Test Set
-                test_predictions, test_actuals = self._evaluate_model_on_test_set(model)
-                metrics = self.calculate_metrics(test_actuals, test_predictions)
+                test_predictions, test_actuals, cls_probs = self._evaluate_model_on_test_set(model)
+                metrics = self.calculate_metrics(test_actuals, test_predictions, y_cls_prob=cls_probs)
 
                 # 4. Define Scoring Metric (Prioritizing Directional Accuracy)
                 # Use a custom score that rewards high directional accuracy but penalizes high RMSE
-                
-                # Formula: (Directional Accuracy) - (100 * RMSE)
-                # This emphasizes direction (target: max 100) while keeping error low.
+                # Formula: (Directional Accuracy) - (1 * RMSE)
                 score = metrics['Directional_Accuracy'] - (1 * metrics['RMSE'])
 
                 self.all_results.append({
@@ -130,9 +134,9 @@ class LambdaTuner(ModelEvaluator):
                     'RMSE': metrics['RMSE'],
                     'R2': metrics['R2'],
                     'Dir_Acc_%': metrics['Directional_Accuracy'],
+                    'Dir_Acc_Source': metrics.get('Dir_Acc_Source', 'N/A'),
                     'train_time_s': training_time
                 })
-                
                 logger.info(f"  Result: RMSE={metrics['RMSE']:.4f}, Dir Acc={metrics['Directional_Accuracy']:.2f}%, Score={score:.2f}")
 
                 # 5. Check Best Model
@@ -159,16 +163,10 @@ class LambdaTuner(ModelEvaluator):
         return best_params
 
 if __name__ == "__main__":
-    # Define the search space for the two lambdas
-    # Rationale: Keep Reg around 1.0, and explore Cls from 1.0 (baseline) up to 10.0 (aggressive)
-    # The current issue was instability at 10.0, so we'll search between 1 and 7.
     LAMBDA_REG_VALUES = [0.5, 1.0, 2.0]
     LAMBDA_CLS_VALUES = [1.0, 3.0, 5.0, 7.0]
 
-    # Initialize the tuner
     tuner = LambdaTuner(config=CONFIG, target_stock='AMZN') 
-
-    # Run the tuning process
     best_lambdas = tuner.run_grid_search(LAMBDA_REG_VALUES, LAMBDA_CLS_VALUES)
 
     print("\nOptimal Lambda Parameters Found:")
