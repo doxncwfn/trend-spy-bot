@@ -1,0 +1,317 @@
+\documentclass[twoside,final]{hcmut-report}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T5]{fontenc}
+\usepackage[protrusion=false]{microtype}
+
+\usepackage{graphicx, caption}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{multirow,multicol}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{float}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{makecell}
+\usepackage{subcaption}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{tcolorbox}
+\usepackage{lastpage}
+
+\definecolor{keywordcolor}{rgb}{0.13,0.13,1} % Blue keywords
+\definecolor{stringcolor}{rgb}{0.7,0.13,0.13} % Dark red strings
+\definecolor{commentcolor}{rgb}{0.25,0.5,0.35} % Green comments
+\definecolor{backgroundcolor}{rgb}{0.97,0.97,0.97} % Light background
+\definecolor{numbercolor}{rgb}{0.85,0.65,0.13} % Numbers
+
+\lstdefinelanguage{Python}{
+  morekeywords={
+    and, as, assert, async, await, break, class, continue, def, del, elif, else, except,
+    False, finally, for, from, global, if, import, in, is, lambda, None, nonlocal, not, 
+    or, pass, raise, return, True, try, while, with, yield
+  },
+  keywordstyle=\color{keywordcolor}\bfseries,
+  morekeywords=[2]{bool, bytes, bytearray, complex, dict, float, frozenset, int, list, object, set, str, tuple},
+  keywordstyle=[2]\color{blue}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=true,
+  comment=[l]{\#},
+  morecomment=[s]{'''}{'''}, 
+  morecomment=[s]{"""}{"""},
+  commentstyle=\color{commentcolor}\ttfamily,
+  stringstyle=\color{stringcolor}\ttfamily,
+  morestring=[b]',
+  morestring=[b]",
+  % Highlight numbers
+  literate=
+    *{0}{{{\color{numbercolor}0}}}1
+    {1}{{{\color{numbercolor}1}}}1
+    {2}{{{\color{numbercolor}2}}}1
+    {3}{{{\color{numbercolor}3}}}1
+    {4}{{{\color{numbercolor}4}}}1
+    {5}{{{\color{numbercolor}5}}}1
+    {6}{{{\color{numbercolor}6}}}1
+    {7}{{{\color{numbercolor}7}}}1
+    {8}{{{\color{numbercolor}8}}}1
+    {9}{{{\color{numbercolor}9}}}1
+    {.0}{{{\color{numbercolor}.0}}}2
+    {.1}{{{\color{numbercolor}.1}}}2
+    {.2}{{{\color{numbercolor}.2}}}2
+    {.3}{{{\color{numbercolor}.3}}}2
+    {.4}{{{\color{numbercolor}.4}}}2
+    {.5}{{{\color{numbercolor}.5}}}2
+    {.6}{{{\color{numbercolor}.6}}}2
+    {.7}{{{\color{numbercolor}.7}}}2
+    {.8}{{{\color{numbercolor}.8}}}2
+    {.9}{{{\color{numbercolor}.9}}}2
+    {e+}{{{\color{numbercolor}e+}}}2
+    {e-}{{{\color{numbercolor}e-}}}2
+    {\#\#NUMSTART\#\#}{}{0}
+    {\#\#NUMEND\#\#}{}{0},
+}
+\lstset{
+  language=Python,
+  backgroundcolor=\color{backgroundcolor},
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=10pt,
+  tabsize=2,
+  showspaces=false,
+  showstringspaces=false,
+  breaklines=true,
+  breakatwhitespace=true,
+  frame=single,
+}
+
+\lstdefinelanguage{TypeScript}{
+  keywords={abstract, as, boolean, break, case, catch, class, continue, const, constructor, debugger, declare, default, delete, do, else, enum, export, extends, false, finally, for, from, function, get, if, implements, import, in, infer, instanceof, interface, is, keyof, let, module, namespace, never, new, null, number, object, of, package, private, protected, public, readonly, require, global, return, set, static, string, super, switch, symbol, this, throw, true, try, type, typeof, undefined, unique, unknown, var, void, while, with, yield, async, await},
+  keywordstyle=\color{keywordcolor}\bfseries,
+  ndkeywords={string, number, boolean, Promise, any, void},
+  ndkeywordstyle=\color{blue}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=true,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{commentcolor}\ttfamily,
+  stringstyle=\color{stringcolor}\ttfamily,
+  morestring=[b]',
+  morestring=[b]",
+}
+
+\lstset{
+  language=TypeScript,
+  backgroundcolor=\color{backgroundcolor},
+  basicstyle=\ttfamily\small,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  stepnumber=1,
+  numbersep=10pt,
+  tabsize=2,
+  showspaces=false,
+  showstringspaces=false,
+  breaklines=true,
+  breakatwhitespace=true,
+  frame=single,
+}
+\lstdefinelanguage{EnvCustom}{
+  keywords={VITE_APP_API_URL, DATABASE_URL, DB_HOST, DB_USER, DB_PASSWORD, DB_PORT, DB_NAME, JWT_SECRET},
+  keywordstyle=\color{blue}\bfseries,
+  sensitive=true,
+  comment=[l]{\#},
+  commentstyle=\color{gray}\ttfamily,
+  morestring=[b]',
+  morestring=[b]",
+  stringstyle=\color{red}\ttfamily,
+  identifierstyle=\color{black}
+}
+
+\lstdefinelanguage{JavaScriptCustom}{
+  keywords={
+    break, case, catch, class, const, continue, debugger, default, delete, do, else, export,
+    extends, finally, for, function, if, import, in, instanceof, let, new, return, super, 
+    switch, this, throw, try, typeof, var, void, while, with, yield, await, async,
+    mysql, dotenv, process, config, createPool, getConnection, release
+  },
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={true, false, null, undefined, NaN, Infinity},
+  ndkeywordstyle=\color{teal}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=true,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{gray}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+
+\lstdefinelanguage{SQL}
+{
+  keywords={SELECT, FROM, WHERE, GROUP BY, HAVING, ORDER, BY, CREATE, PROCEDURE, FUNCTION, TRIGGER, BEGIN, END, DECLARE, IF, ELSE, RETURN, SET, INSERT, UPDATE, DELETE, INTO, VALUES, SIGNAL, JOIN, ON, AND, IN, GROUP, AS, RETURNS, DETERMINISTIC, COUNT, IFNULL, SQL, DATA, READS, THEN, AFTER, FOR, EACH, ROW, OLD, NEW, ROUND, CONSTRAINT, FOREIGN, KEY, REFERENCES, PRIMARY, CHECK, TABLE, DEFAULT, DESC, UNION, ALL, OVER, WHILE, DO, LEAVE, EXISTS, BEFORE, OR, IDENTIFIED, GRANT, TO, LEFT, RIGHT},
+  keywordstyle=\color{blue}\bfseries,
+  morekeywords=[2]{INT, CHAR, VARCHAR, BOOLEAN, DATE, DECIMAL, ENUM, TIME, CASCADE, NULL, NOT, USER, PRIVILEGES, TRUE},
+  keywordstyle=[2]\color{red}\bfseries,
+  comment=[l]{--},
+  commentstyle=\color{gray}\ttfamily,
+  morestring=[b]',
+  stringstyle=\color{teal},
+  basicstyle=\ttfamily\small,
+  showstringspaces=false,
+  breaklines=true
+}
+
+\lstset
+{
+  language=SQL,
+  frame=single,
+  breaklines=true,
+  columns=flexible,
+  keepspaces=true,
+  numbers=left,
+  numberstyle=\tiny\color{gray},
+  backgroundcolor=\color{white}
+}
+\newcommand{\sql}[1]
+{
+  \begin{lstlisting}[language=sql]
+    #1
+  \end{lstlisting}
+}
+\newcommand{\python}[1]
+{
+  \begin{lstlisting}[language=python]
+    #1
+  \end{lstlisting}
+}
+\AtBeginDocument{\counterwithin{lstlisting}{section}}
+
+\begin{document}
+\fancyfoot{}
+\coverpage\clearpage
+
+\tableofcontents\clearpage
+% \listoffigures\clearpage
+\setcounter{page}{1}
+\fancyfoot[L]{\scriptsize \ttfamily Programming Intergration Project\\1$^{\texttt{st}}$ Semester -- Academic year 2025-2026}
+\fancyfoot[R]{\scriptsize \ttfamily Page {\thepage}/\pageref{LastPage}}
+
+\section*{Executive Summary}
+TrendSpy is a quantitative finance project leveraging deep learning in PyTorch to forecast 5-day probabilistic price change intervals for over 50 major stocks using daily OHLCV data. The model outputs a \textcolor{red}{mean percentage change} ($\mu$), \textcolor{red}{an uncertainty bound} ($\sigma$), and a \textcolor{red}{derived confidence score} (e.g., 62\% chance of $+0.2\%$ to $+1.0\%$), focusing on relative alpha through cross-sectional normalization. By combining LSTM for temporal processing, Transformer for contextual awareness, and a Gaussian output head, it addresses the limitations of point predictions in stochastic markets. The implementation follows a phased roadmap, starting with baseline viability and progressing to robust backtesting, targeting metrics like Information Coefficient (IC)~$>$~0.03 and a long-short Sharpe Ratio~$>$~0.5. Deliverables include a daily-updatable pipeline and UI stock cards for tradeable insights.
+\section{Motivation \& Problem Statement}
+\subsection{The Problem}
+Traditional stock price prediction models, such as those relying on point estimates (e.g., a specific forecasted price), often fail in highly stochastic financial markets where uncertainty and noise dominate. These models frequently capture market ``Beta'' - general trends affecting all stocks, like broad economic shifts - rather than ``Alpha,'' which represents a stock's relative outperformance against peers. This leads to unreliable predictions, especially over multi-day horizons, as they ignore probabilistic distributions and inter-stock dependencies. Additionally, without calibrated uncertainty, outputs lack trading utility, resulting in overconfident or vague signals that do not align with real-world risk management.
+
+\subsection{The Oppotunity}
+Modern portfolio managers, traders, and quantitative analysts require ``tradeable intelligence'' in the form of probabilistic intervals that quantify expected returns, risks, and confidence levels. By shifting to interval predictions ($\mu \pm \sigma$), models can better capture market stochasticity, enabling decisions such as entering positions only when confidence exceeds 60\% for positive returns. This project exploits deep learning's ability to process multi-stock data universally, isolating alpha via techniques like cross-sectional Z-scores, which prevent the model from merely learning when the whole market rises or falls. The 5-day horizon reduces daily noise while providing actionable foresight, aligning with institutional strategies for relative value trading.
+
+\section{Primary Objective}
+\subsection{Probabilistic Output}
+The core aim is to predict 5-day cumulative price change intervals, outputting $\mu$ (expected \% return), $\sigma$ (uncertainty bound as log variance), and a derived confidence score. Confidence is calculated as the probability the return falls within a threshold, such as $P(\text{return} > 0)$ using the cumulative distribution function (CDF) of a $\mathcal{N}(\mu,\,\sigma)$ distribution. This ensures outputs are calibrated and practical, allowing users to filter for high-probability trades.
+
+\subsection{Alpha Capture}
+To focus on relative performance, the model incorporates cross-sectional Z-scores, normalizing features and returns daily across the stock universe. This removes market beta, forcing the model to identify outliers that outperform or underperform peers. I use Z-scores to prevent the model from just learning when the whole market goes up, instead emphasizing true alpha through techniques like residual returns (Stock Return $-$ Beta $\times$ Market Return) and a balanced loss function that prioritizes ranking alongside magnitude.
+
+\subsection{Universal Scalability}
+Design a single model trained simultaneously on many stocks, using a fixed universe for efficient batching and inter-stock learning. This enables daily updates via API ingestion and scalability to larger universes, ensuring timeliness and broad applicability without per-stock retraining.
+
+\section{Technical Approach}
+\subsection{Input}
+Daily OHLCV data is transformed into stationary features for probabilistic 5-day predictions. Key preprocessing includes log returns ($\log(\mathrm{Close}/\mathrm{Prev\_Close}) \times 100$) for additivity and symmetry, distance to simple moving average ($\mathrm{Dist\_SMA} = \mathrm{Close}/\mathrm{SMA} - 1$) for mean-reversion signals (with typical periods: 20, 60, 120), and additional indicators such as Relative Strength Index (RSI), Rate of Change (ROC), and rolling volatility for regime detection.\\
+
+Each feature is cross-sectionally Z-scored (standardized) across the universe daily to isolate alpha and remove market-wide effects. Outliers are handled with winsorization. Synthetic index features, representing aggregated market context, are also included as additional signals. This standardized pipeline transforms raw prices into robust, model-ready inputs for uncertainty-aware interval prediction.
+
+\subsection{Output}
+A hybrid model architecture is adopted to balance temporal forecasting and cross-sectional learning. The core consists of a temporal backbone (LSTM or GRU) to extract features from each stock’s sequential data. These outputs are fed into Transformer layers, which apply attention across the set of stocks for each time step, enabling the model to recognize relative context, market regimes, and peer performance. Additionally, static stock-specific embeddings are included to allow differentiation between stocks beyond just their time series, communicating information such as sector or market capitalization.\\
+
+The output head is fully probabilistic: it produces both a mean ($\mu$) for the predicted return and a log-variance ($\sigma$) representing uncertainty, parameterizing a Gaussian distribution. A confidence score is then derived using the cumulative distribution function (CDF) of $\mathcal{N}(\mu,\,\sigma)$, e.g., $P(\text{return} > 0)$.\\
+
+Training employs a blended loss function to balance accurate ranking (relative alpha) and precise probabilistic calibration. Specifically:
+\begin{itemize}
+  \item \textbf{MarginRankingLoss} (weight $\alpha$): Ensures the model ranks stocks correctly by predicted return, prioritizing selection of winners versus losers and supporting long-short strategies.
+  \item \textbf{Gaussian Negative Log-Likelihood (GNLL)} (weight $1-\alpha$): Penalizes poor fit in both mean and estimated uncertainty, ensuring $\mu$ is unbiased and $\sigma$ is neither over- nor under-confident. This discourages trivial solutions that predict excessively wide intervals or collapse to mean-reversion.
+\end{itemize}
+This approach produces calibrated distributional estimates suitable for risk-aware trading signals, and robust to varying market conditions.
+
+\subsection{Horizon}
+The 5-day forecast horizon balances noise reduction (vs. 1-day) with actionable utility, enabling cumulative log return targets that capture meaningful trends while addressing label overlap through purged validation.
+
+\section{Implementation Roadmap}
+\begin{itemize}
+  \item \textbf{Phase 1: Baseline System (Proof of Concept)}
+        \begin{itemize}
+          \item Establish initial viability using a simple LSTM model trained on 8--15 representative stocks.
+          \item Limit input features to raw log returns and basic indicators such as RSI, ROC, and rolling volatility.
+          \item Train on 2010--2020 data using MSE loss to predict only the mean ($\mu$) return.
+          \item Evaluate performance on chronological splits, targeting MAE $<$ 2\% and Information Coefficient (IC) $\geq$ 0.01.
+          \item If metrics are unmet, halt advancement and prioritize data quality and repeatability.
+        \end{itemize}
+
+  \item \textbf{Phase 2: Probabilistic Core (Gaussian Head \& Calibration)}
+        \begin{itemize}
+          \item Extend the model to output both $\mu$ and uncertainty $\sigma$ using a Gaussian output head.
+          \item Optimize using Gaussian Negative Log-Likelihood (GNLL) loss.
+          \item Add features including distance to SMA (\texttt{Dist\_SMA}) and synthetic index signals.
+          \item Calculate prediction confidence with \texttt{scipy.stats.norm.cdf}.
+          \item Evaluate interval coverage (aiming for $\sim$68\% of true returns within $\pm\sigma$).
+          \item Ensure Brier score $<$ 0.25.
+          \item Address variance overconfidence with explicit regularization.
+        \end{itemize}
+
+  \item \textbf{Phase 3: Cross-Sectional Alpha (Z-Scores \& Ranking Loss)}
+        \begin{itemize}
+          \item Deploy a universal data loader for batching across all stocks and time slices.
+          \item Introduce daily cross-sectional Z-scores and winsorization of inputs/targets.
+          \item Shift the loss to a blend of MarginRanking and GNLL.
+          \item Integrate static embeddings and basic cross-attention for peer context.
+          \item Track key metrics: IC $\geq$ 0.02--0.03 and positive IC decay over days 1--5, confirming alpha extraction from relative normalization and model scalability.
+        \end{itemize}
+
+  \item \textbf{Phase 4: Robust Backtesting (Purged Walk-Forward)}
+        \begin{itemize}
+          \item Upgrade validation to purged walk-forward (purging at least 5 days before test splits).
+          \item Optionally incorporate residual return targets.
+          \item Perform full long-short portfolio backtests (top/bottom selection) including slippage/costs of 5--10bps.
+          \item Benchmark Sharpe $>$ 0.4--0.5.
+          \item Finalize daily inference and calibration CSVs for analysis.
+          \item Ensure the framework is ready for production and real-time deployment.
+        \end{itemize}
+\end{itemize}
+
+
+\section{Expected Outcomes}
+
+\subsection{Target Metrics}
+
+Achieve the following quantifiable goals to ensure statistical robustness and economic viability:
+\begin{itemize}
+  \item \textbf{MAE $<$ 1\%} on predicted mean ($\mu$), demonstrating high-precision forecasts.
+  \item \textbf{Interval Coverage:} 68\% of realized returns should fall within $[\mu \pm \sigma]$, confirming well-calibrated uncertainty estimation.
+  \item \textbf{Calibration Brier Score $<$ 0.2}, indicating reliable probabilistic outputs.
+  \item \textbf{Information Coefficient (IC) $>$ 0.03} on cross-sectional ranks, reflecting meaningful signal extraction.
+  \item \textbf{Positive IC Decay} over five forecast days, providing actionable horizon insight.
+  \item \textbf{Long-Short Sharpe Ratio $>$ 0.5} in walk-forward backtests, validating economic utility after transaction costs.
+\end{itemize}
+
+\subsection{Deliverables}
+
+\begin{itemize}
+  \item A \textbf{deployable PyTorch pipeline} for automated, daily model retraining and inference.
+  \item \textbf{UI elements} including interactive stock cards with percent change bars, confidence scores, and upper/lower predictive bounds for end-user interpretability.
+  \item \textbf{Comprehensive logging:} Daily CSVs of \texttt{[Date, Ticker, $\mu$, $\sigma$, Actual]} to support both monitoring and advanced analysis.
+  \item \textbf{Optional extensions:}
+        \begin{itemize}
+          \item Full Transformer-based model integration for sequence modeling.
+          \item Hyperparameter optimization using tools like Optuna.
+          \item Sentiment signal ingestion (e.g., via \texttt{x\_semantic\_search}) for additional alpha.
+        \end{itemize}
+\end{itemize}
+
+\end{document}
