@@ -42,7 +42,7 @@
 \newcommand{\@uniname}{HO CHI MINH CITY UNIVERSITY OF TECHNOLOGY}
 \newcommand{\@deptname}{FACULTY OF COMPUTER SCIENCE AND ENGINEERING}
 \newcommand{\@coursename}{Programming Integration Project\\Artificial Intelligence}
-\newcommand{\@reporttype}{Full Technical Report}
+\newcommand{\@reporttype}{Full Technical Report\\\href{https://github.com/doxncwfn/trend-spy-bot/tree/main/src/backend/models/train}{\textcolor{blue}{Source Code}}}
 \renewcommand{\@title}{Deep Learning for Relative Stock Performance\\A Probabilistic Interval Approach}
 \newcommand{\@advisor}{& M.Sc. Nguyễn An Khương &}
 \newcommand{\@stuname}{& Doãn Phương Hùng Cường & ID 2310381}
