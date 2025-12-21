@@ -63,4 +63,5 @@ dist-ssr
 data/
 
 # Trained models
-*.keras
+*.pth
+.env
