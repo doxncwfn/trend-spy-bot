@@ -61,7 +61,7 @@ dist-ssr
 
 # Backend Stuff
 data/
-
+media/
 # Trained models
 *.pth
-.env
+*.env
