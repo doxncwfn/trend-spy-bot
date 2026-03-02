@@ -65,3 +65,4 @@ media/
 # Trained models
 *.pth
 *.env
+wandb/
